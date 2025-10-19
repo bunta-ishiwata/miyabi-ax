@@ -74,6 +74,15 @@
       ],
       "disabled": false,
       "description": "Puppeteer MCP - Chrome DevTools統合・コンソールログ取得・ページ操作"
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp"
+      ],
+      "disabled": false,
+      "description": "Chrome DevTools MCP - 公式Chrome DevTools統合・Console/Network/Performance監視・JavaScriptエラー検出"
     }
   }
 }

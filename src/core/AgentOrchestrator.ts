@@ -12,7 +12,9 @@ import { IssueAgent } from '../agents/IssueAgent.js';
 import { CodeGenAgent } from '../agents/CodeGenAgent.js';
 import { ReviewAgent } from '../agents/ReviewAgent.js';
 import { TestAgent } from '../agents/TestAgent.js';
+// import { TestAgentMCP } from '../agents/TestAgentMCP.js'; // TODO: Phase 3で使用予定
 import { PRAgent } from '../agents/PRAgent.js';
+import { ErrorFeedbackLoop } from './ErrorFeedbackLoop.js';
 import type {
   Issue,
   ExecutionPlan,
@@ -40,7 +42,9 @@ export class AgentOrchestrator {
   private codeGenAgent: CodeGenAgent;
   private reviewAgent: ReviewAgent;
   private testAgent: TestAgent;
+  // private testAgentMCP: TestAgentMCP; // TODO: Phase 3で使用予定
   private prAgent: PRAgent;
+  private errorFeedbackLoop: ErrorFeedbackLoop;
 
   private readonly MAX_ITERATIONS = 5;
   private readonly REVIEW_THRESHOLD = 80;
@@ -52,7 +56,9 @@ export class AgentOrchestrator {
     this.codeGenAgent = new CodeGenAgent();
     this.reviewAgent = new ReviewAgent();
     this.testAgent = new TestAgent();
+    // this.testAgentMCP = new TestAgentMCP(); // TODO: Phase 3で使用予定
     this.prAgent = new PRAgent();
+    this.errorFeedbackLoop = new ErrorFeedbackLoop();
   }
 
   /**
@@ -128,10 +134,22 @@ export class AgentOrchestrator {
         testResult = testResultData.data as TestResult;
         console.log(`✅ カバレッジ: ${testResult.coverage}%\n`);
 
-        // テストチェック
+        // テストチェック - エラーがあれば自動修正
         if (testResult.errors.length > 0) {
           console.log(`⚠️  エラー ${testResult.errors.length}件検出`);
           console.log('🔧 自動修正を試行...\n');
+
+          // エラーフィードバックループで自動修正
+          const feedback = await this.errorFeedbackLoop.analyzeErrors(testResult.errors);
+          console.log(`📊 エラー分析完了 (優先度: ${feedback.priority})`);
+
+          try {
+            codeGenResult = await this.errorFeedbackLoop.fixErrors(feedback, codeGenResult);
+            console.log('✅ 自動修正完了、再テストします\n');
+          } catch (error) {
+            console.log(`❌ 自動修正失敗: ${error}\n`);
+          }
+
           continue;
         }
 
