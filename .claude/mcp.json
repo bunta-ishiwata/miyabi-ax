@@ -56,6 +56,24 @@
       ],
       "disabled": false,
       "description": "Miyabi CLI統合 - プロジェクト作成、Agent実行、自動化機能"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@executeautomation/playwright-mcp-server"
+      ],
+      "disabled": false,
+      "description": "Playwright MCP - ブラウザ自動操作・E2Eテスト・スクリーンショット"
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-puppeteer"
+      ],
+      "disabled": false,
+      "description": "Puppeteer MCP - Chrome DevTools統合・コンソールログ取得・ページ操作"
     }
   }
 }

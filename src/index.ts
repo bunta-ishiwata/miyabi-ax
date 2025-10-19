@@ -6,6 +6,7 @@
 
 export * from './agents/index.js';
 export * from './core/BaseAgent.js';
+export * from './core/AgentOrchestrator.js';
 export * from './types/agent.js';
 
 // Version

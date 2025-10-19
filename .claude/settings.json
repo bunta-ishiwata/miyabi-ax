@@ -1,0 +1,71 @@
+{
+  "projectContext": "MIYABI AX - ローカル完結型自律開発フレームワーク",
+  "workingDirectory": ".",
+  "preferredStyle": {
+    "language": "TypeScript",
+    "typeMode": "strict",
+    "commitMessage": "conventional",
+    "documentation": "JSDoc",
+    "testing": "Vitest"
+  },
+  "miyabiAX": {
+    "forceAgentExecution": true,
+    "autoCreateIssue": true,
+    "localOnly": true,
+    "agents": {
+      "coordinator": "src/agents/CoordinatorAgent.ts",
+      "issue": "src/agents/IssueAgent.ts",
+      "codegen": "src/agents/CodeGenAgent.ts",
+      "review": "src/agents/ReviewAgent.ts",
+      "test": "src/agents/TestAgent.ts",
+      "pr": "src/agents/PRAgent.ts",
+      "deployment": "src/agents/DeploymentAgent.ts"
+    }
+  },
+  "qualityThreshold": {
+    "minScore": 80,
+    "testCoverage": 80,
+    "typeScriptErrors": 0,
+    "eslintErrors": 0
+  },
+  "mcp": {
+    "playwright": {
+      "enabled": true,
+      "autoLaunch": false
+    },
+    "puppeteer": {
+      "enabled": true,
+      "autoLaunch": false,
+      "headless": true
+    }
+  },
+  "hooks": {
+    "userPromptSubmit": ".claude/hooks/miyabi-ax-validator.sh",
+    "beforeEdit": null,
+    "afterEdit": null
+  },
+  "logging": {
+    "directory": ".ai/logs",
+    "format": "LDD",
+    "level": "info"
+  },
+  "commands": {
+    "/test": ".claude/commands/test.md",
+    "/agent-run": ".claude/commands/agent-run.md",
+    "/verify": ".claude/commands/verify.md",
+    "/deploy": ".claude/commands/deploy.md",
+    "/create-issue": ".claude/commands/create-issue.md",
+    "/miyabi-auto": ".claude/commands/miyabi-auto.md"
+  },
+  "shikigaku": {
+    "principles": [
+      "責任と権限の明確化",
+      "結果重視",
+      "階層の明確化",
+      "誤解・錯覚の排除",
+      "感情的判断の排除"
+    ],
+    "labels": 53,
+    "hierarchy": "Human → CoordinatorAgent → SpecialistAgents"
+  }
+}

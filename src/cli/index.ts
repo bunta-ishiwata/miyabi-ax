@@ -10,6 +10,8 @@
  */
 
 import { VERSION, FRAMEWORK_NAME } from '../index.js';
+import { AgentOrchestrator } from '../core/AgentOrchestrator.js';
+import type { Issue } from '../types/agent.js';
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -101,17 +103,27 @@ async function agentRunCommand(args: string[]): Promise<void> {
     process.exit(1);
   }
 
-  console.log(`🤖 Issue #${issueNumber} の自動処理を開始...\n`);
+  // Issueをフェッチ（モック実装）
+  const issue: Issue = {
+    number: issueNumber,
+    title: `Issue #${issueNumber} の処理`,
+    body: `- [ ] タスク1\n- [ ] タスク2\n- [ ] タスク3`,
+    labels: [],
+    state: 'open',
+    assignees: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
 
-  // TODO: 実際のエージェント実行
-  console.log('✅ CoordinatorAgent - DAG分解完了');
-  console.log('✅ IssueAgent - ラベル自動付与');
-  console.log('✅ CodeGenAgent - コード生成中...');
-  console.log('✅ ReviewAgent - 品質チェック (スコア: 85/100)');
-  console.log('✅ TestAgent - テスト実行 (カバレッジ: 82%)');
-  console.log('✅ PRAgent - Draft PR作成\n');
+  // Orchestratorで実行
+  const orchestrator = new AgentOrchestrator();
+  const result = await orchestrator.processIssue(issue);
 
-  console.log('🎉 自動処理完了！\n');
+  // 結果表示
+  orchestrator.printSummary(result);
+
+  // 終了コード
+  process.exit(result.success ? 0 : 1);
 }
 
 /**
