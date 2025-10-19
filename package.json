@@ -36,12 +36,24 @@
     "dag",
     "coordinator",
     "claude",
+    "claude-code",
     "mcp",
     "playwright",
-    "devtools"
+    "devtools",
+    "automation",
+    "framework",
+    "typescript",
+    "local-first",
+    "shikigaku",
+    "continuous-integration",
+    "error-feedback-loop"
   ],
   "author": "Bunta Ishiwata",
   "license": "MIT",
+  "homepage": "https://github.com/bunta-ishiwata/miyabi-ax#readme",
+  "bugs": {
+    "url": "https://github.com/bunta-ishiwata/miyabi-ax/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/bunta-ishiwata/miyabi-ax.git"

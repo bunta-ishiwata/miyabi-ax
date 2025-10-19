@@ -1,0 +1,37 @@
+# NPM公開時に除外するファイル
+
+# ソースコード（distのみ公開）
+src/
+tests/
+
+# 設定ファイル
+tsconfig.json
+.eslintrc.*
+.prettierrc.*
+
+# Claude Code設定
+.claude/
+
+# Git
+.git/
+.gitignore
+
+# CI/CD
+.github/
+
+# 開発用
+node_modules/
+*.log
+.DS_Store
+
+# テスト
+coverage/
+.nyc_output/
+
+# ビルド以外
+*.ts
+!*.d.ts
+
+# ドキュメント（一部除外）
+REQUIREMENTS_AX.md
+CLAUDE.md
