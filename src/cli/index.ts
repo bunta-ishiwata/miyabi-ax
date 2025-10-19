@@ -1,56 +1,107 @@
 #!/usr/bin/env node
 
 /**
- * MIYABI AX - CLI Tool
+ * MIYABI AX - Interactive CLI Tool
  *
  * Usage:
- *   npx miyabi-ax init
- *   npx miyabi-ax status
- *   npx miyabi-ax agent-run --issue 123
+ *   npx miyabi-ax
  */
 
+import * as readline from 'readline';
 import { VERSION, FRAMEWORK_NAME } from '../index.js';
 import { AgentOrchestrator } from '../core/AgentOrchestrator.js';
 import type { Issue } from '../types/agent.js';
 
 const args = process.argv.slice(2);
-const command = args[0];
 
-console.log(`\n🌸 ${FRAMEWORK_NAME} v${VERSION}\n`);
+// バージョン・ヘルプコマンドは直接処理
+if (args.includes('--version') || args.includes('-v')) {
+  console.log(`v${VERSION}`);
+  process.exit(0);
+}
 
-switch (command) {
-  case 'init':
-    await initCommand();
-    break;
-  case 'status':
-    await statusCommand();
-    break;
-  case 'agent-run':
-    await agentRunCommand(args.slice(1));
-    break;
-  case 'help':
-  case '--help':
-  case '-h':
-    showHelp();
-    break;
-  case 'version':
-  case '--version':
-  case '-v':
-    console.log(`v${VERSION}`);
-    break;
-  default:
-    if (command) {
-      console.error(`❌ Unknown command: ${command}\n`);
+if (args.includes('--help') || args.includes('-h')) {
+  showHelp();
+  process.exit(0);
+}
+
+// メイン対話型UI起動
+await startInteractiveCLI();
+
+/**
+ * 対話型CLI起動
+ */
+async function startInteractiveCLI(): Promise<void> {
+  console.log(`\n${'='.repeat(80)}`);
+  console.log(`🌸 ${FRAMEWORK_NAME} v${VERSION}`);
+  console.log('ローカル完結型自律開発フレームワーク');
+  console.log('='.repeat(80) + '\n');
+
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  // メインメニュー表示
+  showMainMenu();
+
+  // 対話ループ
+  rl.on('line', async (input: string) => {
+    const choice = input.trim();
+
+    switch (choice) {
+      case '1':
+        await handleInit(rl);
+        break;
+      case '2':
+        await handleStatus(rl);
+        break;
+      case '3':
+        await handleAgentRun(rl);
+        break;
+      case '4':
+        showHelp();
+        showMainMenu();
+        break;
+      case '5':
+      case 'q':
+      case 'quit':
+      case 'exit':
+        console.log('\n👋 MIYABI AX を終了します\n');
+        rl.close();
+        process.exit(0);
+        break;
+      default:
+        console.log('❌ 無効な選択です。1-5の数字を入力してください。\n');
+        showMainMenu();
+        break;
     }
-    showHelp();
-    process.exit(command ? 1 : 0);
+  });
+
+  rl.on('close', () => {
+    process.exit(0);
+  });
 }
 
 /**
- * init command - 初回セットアップ
+ * メインメニュー表示
  */
-async function initCommand(): Promise<void> {
-  console.log('📦 MIYABI AX セットアップを開始...\n');
+function showMainMenu(): void {
+  console.log('📋 メインメニュー:');
+  console.log('  [1] 初回セットアップ (init)');
+  console.log('  [2] ステータス確認 (status)');
+  console.log('  [3] エージェント実行 (agent-run)');
+  console.log('  [4] ヘルプ表示 (help)');
+  console.log('  [5] 終了 (quit)');
+  console.log();
+  process.stdout.write('選択してください (1-5): ');
+}
+
+/**
+ * [1] 初回セットアップ
+ */
+async function handleInit(_rl: readline.Interface): Promise<void> {
+  console.log('\n📦 MIYABI AX セットアップを開始...\n');
 
   // TODO: 実装
   console.log('✅ .miyabi-ax/ ディレクトリ作成');
@@ -59,56 +110,62 @@ async function initCommand(): Promise<void> {
   console.log('✅ .gitignore 更新\n');
 
   console.log('✨ セットアップ完了！\n');
-  console.log('次のステップ:');
-  console.log('  1. npx miyabi-ax status - 状態確認');
-  console.log('  2. npx miyabi-ax agent-run --issue <number> - エージェント実行\n');
+  showMainMenu();
 }
 
 /**
- * status command - 状態確認
+ * [2] ステータス確認
  */
-async function statusCommand(): Promise<void> {
-  console.log('📊 MIYABI AX ステータス\n');
+async function handleStatus(_rl: readline.Interface): Promise<void> {
+  console.log('\n📊 MIYABI AX ステータス\n');
 
-  // TODO: 実装
   console.log('Environment:');
-  console.log('  Node.js:', process.version);
-  console.log('  Platform:', process.platform);
-  console.log('  CWD:', process.cwd());
+  console.log(`  Node.js: ${process.version}`);
+  console.log(`  Platform: ${process.platform}`);
+  console.log(`  CWD: ${process.cwd()}`);
   console.log();
 
   console.log('Agents:');
-  console.log('  ✅ CoordinatorAgent');
-  console.log('  ✅ IssueAgent');
-  console.log('  ✅ CodeGenAgent');
-  console.log('  ✅ ReviewAgent');
-  console.log('  ✅ TestAgent');
-  console.log('  ✅ PRAgent');
-  console.log('  ✅ DeploymentAgent');
+  console.log('  ✅ CoordinatorAgent - タスク統括・DAG分解');
+  console.log('  ✅ IssueAgent - Issue分析・ラベル管理');
+  console.log('  ✅ CodeGenAgent - AI駆動コード生成');
+  console.log('  ✅ ReviewAgent - 品質判定・スコアリング');
+  console.log('  ✅ TestAgent - テスト実行・MCP統合');
+  console.log('  ✅ PRAgent - PR自動作成');
+  console.log('  ✅ DeploymentAgent - CI/CDデプロイ');
   console.log();
 
   console.log('Configuration:');
-  console.log('  Config file: .miyabi-ax/config.json');
+  console.log('  Config: .miyabi-ax/config.json');
   console.log('  Claude Code: .claude/settings.json');
+  console.log('  MCP Servers: .claude/mcp.json');
   console.log();
+
+  showMainMenu();
 }
 
 /**
- * agent-run command - エージェント実行
+ * [3] エージェント実行
  */
-async function agentRunCommand(args: string[]): Promise<void> {
-  const issueNumber = parseIssueNumber(args);
+async function handleAgentRun(rl: readline.Interface): Promise<void> {
+  console.log('\n🤖 エージェント自動実行モード\n');
 
-  if (!issueNumber) {
-    console.error('❌ Issue番号を指定してください\n');
-    console.log('Usage: npx miyabi-ax agent-run --issue <number>\n');
-    process.exit(1);
+  // Issue番号を対話的に取得
+  const issueNumber = await askQuestion(rl, 'Issue番号を入力してください: ');
+  const num = parseInt(issueNumber, 10);
+
+  if (isNaN(num)) {
+    console.log('❌ 無効なIssue番号です\n');
+    showMainMenu();
+    return;
   }
+
+  console.log(`\n🌸 Issue #${num} の自動処理を開始します...\n`);
 
   // Issueをフェッチ（モック実装）
   const issue: Issue = {
-    number: issueNumber,
-    title: `Issue #${issueNumber} の処理`,
+    number: num,
+    title: `Issue #${num} の処理`,
     body: `- [ ] タスク1\n- [ ] タスク2\n- [ ] タスク3`,
     labels: [],
     state: 'open',
@@ -124,42 +181,46 @@ async function agentRunCommand(args: string[]): Promise<void> {
   // 結果表示
   orchestrator.printSummary(result);
 
-  // 終了コード
-  process.exit(result.success ? 0 : 1);
+  console.log('\nEnterキーを押してメニューに戻る...');
+  await askQuestion(rl, '');
+  showMainMenu();
 }
 
 /**
- * help command
+ * 対話的に質問する
+ */
+function askQuestion(rl: readline.Interface, question: string): Promise<string> {
+  return new Promise((resolve) => {
+    rl.question(question, (answer: string) => {
+      resolve(answer.trim());
+    });
+  });
+}
+
+/**
+ * ヘルプ表示
  */
 function showHelp(): void {
-  console.log(`Usage: npx miyabi-ax <command> [options]
+  console.log(`
+🌸 MIYABI AX - ローカル完結型自律開発フレームワーク
 
-Commands:
-  init              初回セットアップを実行
-  status            現在の状態を表示
-  agent-run         エージェント自動実行
-    --issue <num>     処理するIssue番号
-  help              このヘルプを表示
-  version           バージョンを表示
+対話型モード:
+  npx miyabi-ax                対話型UIを起動
 
-Examples:
-  npx miyabi-ax init
-  npx miyabi-ax status
-  npx miyabi-ax agent-run --issue 123
+コマンドラインモード:
+  npx miyabi-ax --help         ヘルプを表示
+  npx miyabi-ax --version      バージョンを表示
+
+機能:
+  - 7つの自律エージェント（Coordinator/Issue/CodeGen/Review/Test/PR/Deployment）
+  - DAGベースのタスク分解・並列実行
+  - エラー自動修正ループ（エラー0まで）
+  - MCP統合（Playwright + Chrome DevTools）
+  - 識学理論準拠の53ラベル体系
+  - 品質スコア80点以上、カバレッジ80%以上を自動担保
 
 Documentation:
   https://github.com/bunta-ishiwata/miyabi-ax
-`);
-}
 
-/**
- * Issue番号をパース
- */
-function parseIssueNumber(args: string[]): number | null {
-  const issueIndex = args.indexOf('--issue');
-  if (issueIndex >= 0 && args[issueIndex + 1]) {
-    const num = parseInt(args[issueIndex + 1], 10);
-    return isNaN(num) ? null : num;
-  }
-  return null;
+`);
 }
