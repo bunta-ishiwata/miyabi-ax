@@ -39,9 +39,11 @@ switch (command) {
     console.log(`v${VERSION}`);
     break;
   default:
-    console.error(`❌ Unknown command: ${command}\n`);
+    if (command) {
+      console.error(`❌ Unknown command: ${command}\n`);
+    }
     showHelp();
-    process.exit(1);
+    process.exit(command ? 1 : 0);
 }
 
 /**
