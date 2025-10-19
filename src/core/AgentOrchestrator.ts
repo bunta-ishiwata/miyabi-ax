@@ -12,7 +12,7 @@ import { IssueAgent } from '../agents/IssueAgent.js';
 import { CodeGenAgent } from '../agents/CodeGenAgent.js';
 import { ReviewAgent } from '../agents/ReviewAgent.js';
 import { TestAgent } from '../agents/TestAgent.js';
-// import { TestAgentMCP } from '../agents/TestAgentMCP.js'; // TODO: Phase 3で使用予定
+import { TestAgentMCP } from '../agents/TestAgentMCP.js';
 import { PRAgent } from '../agents/PRAgent.js';
 import { ErrorFeedbackLoop } from './ErrorFeedbackLoop.js';
 import type {
@@ -42,7 +42,7 @@ export class AgentOrchestrator {
   private codeGenAgent: CodeGenAgent;
   private reviewAgent: ReviewAgent;
   private testAgent: TestAgent;
-  // private testAgentMCP: TestAgentMCP; // TODO: Phase 3で使用予定
+  private testAgentMCP: TestAgentMCP;
   private prAgent: PRAgent;
   private errorFeedbackLoop: ErrorFeedbackLoop;
 
@@ -56,7 +56,7 @@ export class AgentOrchestrator {
     this.codeGenAgent = new CodeGenAgent();
     this.reviewAgent = new ReviewAgent();
     this.testAgent = new TestAgent();
-    // this.testAgentMCP = new TestAgentMCP(); // TODO: Phase 3で使用予定
+    this.testAgentMCP = new TestAgentMCP();
     this.prAgent = new PRAgent();
     this.errorFeedbackLoop = new ErrorFeedbackLoop();
   }
@@ -125,7 +125,7 @@ export class AgentOrchestrator {
           continue;
         }
 
-        // Step 5: テスト実行
+        // Step 5: テスト実行（MCP統合版も実行）
         console.log('🧪 Step 5: テスト実行');
         const testResultData = await this.testAgent.execute(codeGenResult);
         if (!testResultData.success || !testResultData.data) {
@@ -133,6 +133,16 @@ export class AgentOrchestrator {
         }
         testResult = testResultData.data as TestResult;
         console.log(`✅ カバレッジ: ${testResult.coverage}%\n`);
+
+        // MCP統合テストも実行（Playwright + Chrome DevTools）
+        console.log('🔧 MCP統合テスト実行（Playwright + Chrome DevTools）');
+        const mcpErrors = await this.testAgentMCP.runAllMCPTests(codeGenResult);
+        if (mcpErrors.length > 0) {
+          console.log(`⚠️  MCP統合テストで ${mcpErrors.length}件のエラー検出`);
+          testResult.errors.push(...mcpErrors);
+        } else {
+          console.log('✅ MCP統合テスト: エラー0件\n');
+        }
 
         // テストチェック - エラーがあれば自動修正
         if (testResult.errors.length > 0) {

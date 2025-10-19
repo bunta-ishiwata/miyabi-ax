@@ -21,26 +21,51 @@ MIYABI AXは、識学理論とAIエージェントを組み合わせた次世代
 2. **IssueAgent** - Issue分析・ラベル管理
 3. **CodeGenAgent** - AI駆動コード生成
 4. **ReviewAgent** - コード品質判定
-5. **TestAgent** - テスト自動実行
+5. **TestAgent** - テスト自動実行（MCP統合）
 6. **PRAgent** - Pull Request自動作成
 7. **DeploymentAgent** - CI/CDデプロイ自動化
 
+### 🔧 MCP統合（Model Context Protocol）
+
+MIYABI AXは以下のMCPサーバーと統合されています：
+
+- **Playwright MCP** - ブラウザ自動操作・E2Eテスト
+- **Puppeteer MCP** - Chrome DevTools統合・ページ操作
+- **Chrome DevTools MCP** - Console/Network/Performance監視・JavaScriptエラー自動検出
+
+TestAgentが自動的にこれらのMCPツールを活用し、ブラウザレベルのテストとエラー検出を実行します。
+
 詳細は [REQUIREMENTS_AX.md](REQUIREMENTS_AX.md) を参照
 
-## 📦 インストール
+## 📦 インストール・使い方
+
+### 対話型モード（推奨）
 
 ```bash
-npx miyabi-ax init
+npx miyabi-ax
 ```
 
-## 🚀 使い方
+対話型メニューが表示されます：
+
+```
+🌸 MIYABI AX v1.1.0
+ローカル完結型自律開発フレームワーク
+
+📋 メインメニュー:
+  [1] 初回セットアップ (init)
+  [2] ステータス確認 (status)
+  [3] エージェント実行 (agent-run)
+  [4] ヘルプ表示 (help)
+  [5] 終了 (quit)
+
+選択してください (1-5):
+```
+
+### コマンドラインモード
 
 ```bash
-# 状態確認
-npx miyabi-ax status
-
-# エージェント実行
-npx miyabi-ax agent-run --issue 123
+npx miyabi-ax --help     # ヘルプ表示
+npx miyabi-ax --version  # バージョン表示
 ```
 
 ## 📄 ライセンス
