@@ -5,8 +5,8 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 
-import { AgentOrchestrator } from '../../core/AgentOrchestrator.js';
-import type { Issue } from '../../types/agent.js';
+import { AgentOrchestrator } from '../core/AgentOrchestrator';
+import type { Issue } from '../types/agent';
 
 export async function agentCommand(options: any): Promise<void> {
   console.log(chalk.cyan('\n🌸 MIYABI AX - Agent実行\n'));

@@ -1,19 +1,38 @@
 # 🌸 MIYABI AX
 
-**ローカル完結型自律開発フレームワーク**
+**一つのコマンドで全てが完結する自律型開発フレームワーク**
 
-MIYABI AXは、識学理論とAIエージェントを組み合わせた次世代の自律型開発フレームワークです。Claude Codeと完全統合し、`npx`コマンド一つで誰でも使える、完全ローカル実行型のAI駆動開発環境を提供します。
+MIYABI AXは、[Miyabi](https://github.com/ShunsukeHayashi/Miyabi)のTypeScript版をベースにしたローカル完結型の自律開発フレームワークです。識学理論とAIエージェントを組み合わせ、`npx`コマンド一つで完全自律型のAI駆動開発環境を提供します。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-≥18.0.0-green)](https://nodejs.org/)
 
-## ✨ 特徴
+## ✨ クイックスタート
 
-### 🚀 完全ローカル実行
-- **APIコスト90%以上削減**: すべてのエージェントがローカルで動作
-- **Claude Code統合**: シームレスな開発体験
-- **外部API不要**: プライベート環境でも安全に使用可能
+```bash
+# 対話型モード（推奨）
+npx miyabi-ax
+```
+
+対話型メニューが表示されます:
+
+```
+✨ Miyabi AX
+
+一つのコマンドで全てが完結
+
+何をしますか？
+  🌸 初めての方（初回セットアップ）
+  🆕 新しいプロジェクトを作成
+  📦 既存プロジェクトに追加
+  📊 ステータス確認
+  🩺 ヘルスチェック・診断
+  ⚙️  設定
+  ❌ 終了
+```
+
+## 💡 特徴
 
 ### 🤖 7つの自律エージェント
 

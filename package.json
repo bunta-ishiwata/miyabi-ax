@@ -1,10 +1,10 @@
 {
   "name": "miyabi-ax",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "ローカル完結型自律開発フレームワーク - Miyabi AX",
   "type": "module",
   "bin": {
-    "miyabi-ax": "./dist/cli/index.js"
+    "miyabi-ax": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -21,12 +21,12 @@
   ],
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "tsc",
+    "build": "tsc && chmod +x dist/index.js",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "lint": "eslint . --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
-    "cli": "tsx src/cli/index.ts",
+    "cli": "tsx src/index.ts",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
