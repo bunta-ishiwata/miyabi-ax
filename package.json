@@ -1,6 +1,6 @@
 {
   "name": "miyabi-ax",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "ローカル完結型自律開発フレームワーク - Miyabi AX",
   "type": "module",
   "bin": {
@@ -59,6 +59,7 @@
     "url": "https://github.com/bunta-ishiwata/miyabi-ax.git"
   },
   "dependencies": {
+    "@octokit/rest": "^20.1.2",
     "chalk": "^5.6.2",
     "cli-table3": "^0.6.5",
     "commander": "^11.1.0",
