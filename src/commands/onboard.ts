@@ -11,27 +11,26 @@ export async function onboardCommand(_options: any): Promise<void> {
 
   console.log(chalk.bold('MIYABI AXへようこそ！'));
   console.log('ローカル完結型自律開発フレームワークのセットアップを開始します。\n');
+  console.log(chalk.gray('💡 Claude Code環境では、APIキーは自動的に管理されます\n'));
 
-  await inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       type: 'confirm',
       name: 'hasGithubToken',
       message: 'GitHub Personal Access Tokenは準備済みですか？',
       default: false
-    },
-    {
-      type: 'confirm',
-      name: 'hasAnthropicKey',
-      message: 'Anthropic API Keyは準備済みですか？',
-      default: false
-    },
-    {
-      type: 'confirm',
-      name: 'useClaudeCode',
-      message: 'Claude Codeを使用しますか？',
-      default: true
     }
   ]);
+
+  if (!answers.hasGithubToken) {
+    console.log();
+    console.log(chalk.yellow('📌 GitHub Personal Access Tokenが必要です:'));
+    console.log(chalk.white('  1. https://github.com/settings/tokens/new にアクセス'));
+    console.log(chalk.white('  2. 必要な権限を選択: repo, workflow, read:project'));
+    console.log(chalk.white('  3. トークンを生成してコピー'));
+    console.log(chalk.white('  4. 環境変数 GITHUB_TOKEN に設定'));
+    console.log();
+  }
 
   console.log();
   const spinner = ora('セットアップを実行中...').start();

@@ -7,10 +7,11 @@ import chalk from 'chalk';
 export async function setupCommand(_options: any): Promise<void> {
   console.log(chalk.cyan('\n🌸 MIYABI AX - セットアップガイド\n'));
 
-  console.log(chalk.bold('1. 環境変数の設定'));
-  console.log('   .env ファイルを作成してください:');
-  console.log(chalk.gray('   GITHUB_TOKEN=your_github_token'));
-  console.log(chalk.gray('   ANTHROPIC_API_KEY=your_anthropic_key'));
+  console.log(chalk.bold('1. GitHub Personal Access Token'));
+  console.log('   環境変数 GITHUB_TOKEN を設定してください:');
+  console.log(chalk.gray('   export GITHUB_TOKEN=your_github_token'));
+  console.log();
+  console.log(chalk.gray('   💡 Claude Code環境では、Anthropic APIキーは自動管理されます'));
   console.log();
 
   console.log(chalk.bold('2. Claude Code設定'));
